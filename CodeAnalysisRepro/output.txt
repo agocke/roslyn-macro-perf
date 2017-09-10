@@ -1,0 +1,333 @@
+
+Native stacktrace:
+
+	0   mono                                0x0000000101a5fd91 mono_handle_native_crash + 257
+	1   mono                                0x00000001019b334c mono_sigsegv_signal_handler + 220
+	2   libsystem_platform.dylib            0x00007fffcf037b3a _sigtramp + 26
+	3   ???                                 0x00007fb1cd479810 0x0 + 140401629960208
+	4   mono                                0x0000000101ae61e7 mono_assembly_load_full_nosearch + 439
+	5   mono                                0x0000000101ae22a8 mono_assembly_load_full_internal + 40
+	6   mono                                0x0000000101ae1f17 mono_assembly_load_reference + 519
+	7   mono                                0x0000000101ae8c5d mono_class_from_typeref_checked + 573
+	8   mono                                0x0000000101af767d mono_class_get_checked + 173
+	9   mono                                0x0000000101b4ac16 mono_metadata_parse_type_internal + 1238
+	10  mono                                0x0000000101b4b5ee mono_metadata_parse_method_signature_full + 590
+	11  mono                                0x0000000101b25aa3 mono_method_signature_checked + 483
+	12  mono                                0x0000000101b05c46 mono_method_get_name_full + 726
+	13  libmono-profiler-log.0.dylib        0x0000000101ecaf3d handle_writer_queue_entry + 205
+	14  libmono-profiler-log.0.dylib        0x0000000101ecad98 writer_thread + 568
+	15  libsystem_pthread.dylib             0x00007fffcf04193b _pthread_body + 180
+	16  libsystem_pthread.dylib             0x00007fffcf041887 _pthread_body + 0
+	17  libsystem_pthread.dylib             0x00007fffcf04108d thread_start + 13
+
+Debug info from gdb:
+
+(lldb) command source -s 0 '/tmp/mono-gdb-commands.FwKyUd'
+Executing commands in '/tmp/mono-gdb-commands.FwKyUd'.
+(lldb) process attach --pid 22781
+warning: (x86_64) /Library/Frameworks/Mono.framework/Versions/5.4.0/lib/mono/4.5/mscorlib.dll.dylib empty dSYM file detected, dSYM was created with an executable with no debug info.
+mono was compiled with optimization - stepping may behave oddly; variables may not be available.
+Process 22781 stopped
+* thread #1, name = 'tid_307', queue = 'com.apple.main-thread', stop reason = signal SIGSTOP
+    frame #0: 0x0000000101b23768 mono`jit_info_table_find at jit-info.c:169 [opt]
+  thread #4, name = 'Finalizer', stop reason = signal SIGPROF
+    frame #0: 0x00007fffcef4f386 libsystem_kernel.dylib`semaphore_wait_trap + 10
+libsystem_kernel.dylib`semaphore_wait_trap:
+->  0x7fffcef4f386 <+10>: retq   
+    0x7fffcef4f387 <+11>: nop    
+
+libsystem_kernel.dylib`semaphore_wait_signal_trap:
+    0x7fffcef4f388 <+0>:  movq   %rcx, %r10
+    0x7fffcef4f38b <+3>:  movl   $0x1000025, %eax          ; imm = 0x1000025 
+  thread #12, name = 'tid_310b', stop reason = signal SIGPROF
+    frame #0: 0x00007fffcef56bf2 libsystem_kernel.dylib`__psynch_cvwait + 10
+libsystem_kernel.dylib`__psynch_cvwait:
+->  0x7fffcef56bf2 <+10>: jae    0x7fffcef56bfc            ; <+20>
+    0x7fffcef56bf4 <+12>: movq   %rax, %rdi
+    0x7fffcef56bf7 <+15>: jmp    0x7fffcef4fcaf            ; cerror_nocancel
+    0x7fffcef56bfc <+20>: retq   
+  thread #14, name = 'Threadpool worker', stop reason = signal SIGPROF
+    frame #0: 0x00007fffcef56c22 libsystem_kernel.dylib`__psynch_mutexwait + 10
+libsystem_kernel.dylib`__psynch_mutexwait:
+->  0x7fffcef56c22 <+10>: jae    0x7fffcef56c2c            ; <+20>
+    0x7fffcef56c24 <+12>: movq   %rax, %rdi
+    0x7fffcef56c27 <+15>: jmp    0x7fffcef4fcaf            ; cerror_nocancel
+    0x7fffcef56c2c <+20>: retq   
+  thread #19, name = 'Threadpool worker', stop reason = signal SIGPROF
+    frame #0: 0x00007fffcef56c22 libsystem_kernel.dylib`__psynch_mutexwait + 10
+libsystem_kernel.dylib`__psynch_mutexwait:
+->  0x7fffcef56c22 <+10>: jae    0x7fffcef56c2c            ; <+20>
+    0x7fffcef56c24 <+12>: movq   %rax, %rdi
+    0x7fffcef56c27 <+15>: jmp    0x7fffcef4fcaf            ; cerror_nocancel
+    0x7fffcef56c2c <+20>: retq   
+  thread #20, name = 'Threadpool worker', stop reason = signal SIGPROF
+    frame #0: 0x00007fffcef56c22 libsystem_kernel.dylib`__psynch_mutexwait + 10
+libsystem_kernel.dylib`__psynch_mutexwait:
+->  0x7fffcef56c22 <+10>: jae    0x7fffcef56c2c            ; <+20>
+    0x7fffcef56c24 <+12>: movq   %rax, %rdi
+    0x7fffcef56c27 <+15>: jmp    0x7fffcef4fcaf            ; cerror_nocancel
+    0x7fffcef56c2c <+20>: retq   
+
+Executable module set to "/Library/Frameworks/Mono.framework/Versions/Current/Commands/mono".
+Architecture set to: x86_64h-apple-macosx.
+(lldb) thread list
+Process 22781 stopped
+* thread #1: tid = 0x169d28, 0x0000000101b23768 mono`jit_info_table_find at jit-info.c:169, name = 'tid_307', queue = 'com.apple.main-thread', stop reason = signal SIGSTOP
+  thread #2: tid = 0x169d29, 0x00007fffcef56bf2 libsystem_kernel.dylib`__psynch_cvwait + 10, name = 'SGen worker'
+  thread #3: tid = 0x169d2a, 0x00007fffcef56bf2 libsystem_kernel.dylib`__psynch_cvwait + 10, name = 'SGen worker'
+  thread #4: tid = 0x169d2d, 0x00007fffcef4f386 libsystem_kernel.dylib`semaphore_wait_trap + 10, name = 'Finalizer', stop reason = signal SIGPROF
+  thread #5: tid = 0x169d2e, 0x00007fffcef5744e libsystem_kernel.dylib`__workq_kernreturn + 10
+  thread #6: tid = 0x169d2f, 0x00007fffcef5744e libsystem_kernel.dylib`__workq_kernreturn + 10
+  thread #7: tid = 0x169d31, 0x00007fffcef5744e libsystem_kernel.dylib`__workq_kernreturn + 10
+  thread #8: tid = 0x169d32, 0x00007fffcef56d42 libsystem_kernel.dylib`__pthread_kill + 10, name = 'Profiler sampler'
+  thread #9: tid = 0x169d33, 0x0000000101ec6000 libmono-profiler-log.0.dylib`counters_and_perfcounters_sample at mono-profiler-log.c:2923, name = 'Profiler helper'
+  thread #10: tid = 0x169d34, 0x00007fffcef573ee libsystem_kernel.dylib`__wait4 + 10, name = 'Profiler writer'
+  thread #11: tid = 0x169d35, 0x0000000105ead8c9 dyld`ImageLoaderMachO::findClosestSymbol(mach_header const*, void const*, void const**) + 353, name = 'Profiler dumper'
+  thread #12: tid = 0x169d58, 0x00007fffcef56bf2 libsystem_kernel.dylib`__psynch_cvwait + 10, name = 'tid_310b', stop reason = signal SIGPROF
+  thread #13: tid = 0x169d59, 0x0000000101acf070 mono`per_thread_profiler_hit(ctx=0x0000700000ffb6c8) at mini-posix.c:236, name = 'Threadpool worker'
+  thread #14: tid = 0x169d5a, 0x00007fffcef56c22 libsystem_kernel.dylib`__psynch_mutexwait + 10, name = 'Threadpool worker', stop reason = signal SIGPROF
+  thread #15: tid = 0x169d5b, 0x00007fffcef56c22 libsystem_kernel.dylib`__psynch_mutexwait + 10, name = 'Threadpool worker'
+  thread #16: tid = 0x169d5c, 0x00007fffcef56c22 libsystem_kernel.dylib`__psynch_mutexwait + 10, name = 'Threadpool worker'
+  thread #17: tid = 0x169d5e, 0x00007fffcef56c22 libsystem_kernel.dylib`__psynch_mutexwait + 10, name = 'Threadpool worker'
+  thread #18: tid = 0x169d5f, 0x00007fffcef56c22 libsystem_kernel.dylib`__psynch_mutexwait + 10, name = 'Threadpool worker'
+  thread #19: tid = 0x169d60, 0x00007fffcef56c22 libsystem_kernel.dylib`__psynch_mutexwait + 10, name = 'Threadpool worker', stop reason = signal SIGPROF
+  thread #20: tid = 0x169d61, 0x00007fffcef56c22 libsystem_kernel.dylib`__psynch_mutexwait + 10, name = 'Threadpool worker', stop reason = signal SIGPROF
+(lldb) thread backtrace all
+libmono-profiler-log.0.dylib was compiled with optimization - stepping may behave oddly; variables may not be available.
+* thread #1, name = 'tid_307', queue = 'com.apple.main-thread', stop reason = signal SIGSTOP
+  * frame #0: 0x0000000101b23768 mono`jit_info_table_find at jit-info.c:169 [opt]
+    frame #1: 0x0000000101b23746 mono`jit_info_table_find(table=<unavailable>, hp=<unavailable>, addr=<unavailable>) at jit-info.c:204 [opt]
+    frame #2: 0x0000000101b23640 mono`mono_jit_info_table_find_internal(domain=0x00007fb1cd4113e0, addr="", try_aot=1, allow_trampolines=0) at jit-info.c:278 [opt]
+    frame #3: 0x0000000101a5db75 mono`mini_jit_info_table_find_ext(domain=0x00007fb1cd4113e0, addr="", allow_trampolines=0, out_domain=0x00007fff5e2586d0) at mini-exceptions.c:1351 [opt]
+    frame #4: 0x0000000101a5c589 mono`mono_find_jit_info_ext [inlined] mini_jit_info_table_find(domain=0x00007fb1cd4113e0, addr="", out_domain=<unavailable>) at mini-exceptions.c:1389 [opt]
+    frame #5: 0x0000000101a5c57b mono`mono_find_jit_info_ext(domain=0x00007fb1cd4113e0, jit_tls=0x00007fb1ce80e400, prev_ji=0x0000000000000000, ctx=0x00007fff5e2589b0, new_ctx=0x00007fff5e258828, trace=0x0000000000000000, lmf=<unavailable>, save_locations=<unavailable>, frame=0x0000000000000000) at mini-exceptions.c:563 [opt]
+    frame #6: 0x0000000101a5d0a7 mono`mono_walk_stack_full at mini-exceptions.c:669 [opt]
+    frame #7: 0x0000000101a5d058 mono`mono_walk_stack_full(func=(mono`async_stack_walk_adapter at loader.c:2235), start_ctx=<unavailable>, domain=<unavailable>, jit_tls=<unavailable>, lmf=<unavailable>, unwind_options=<unavailable>, user_data=<unavailable>) at mini-exceptions.c:1122 [opt]
+    frame #8: 0x0000000101a5cdba mono`mono_walk_stack_with_ctx(func=(mono`async_stack_walk_adapter at loader.c:2235), start_ctx=0x00007fff5e258e60, unwind_options=<unavailable>, user_data=0x00007fff5e258e50) at mini-exceptions.c:1001 [opt]
+    frame #9: 0x0000000101b28796 mono`mono_stack_walk_async_safe(func=<unavailable>, initial_sig_context=<unavailable>, user_data=<unavailable>) at loader.c:2267 [opt]
+    frame #10: 0x0000000101ec5f00 libmono-profiler-log.0.dylib`mono_sample_hit(profiler=0x00007fb1cd40ecd0, ip="s\bH\x89«È\x8c\x92ˇˇ√ê\x90\x90\xb8ÿ, context=0x00007fff5e259530) at mono-profiler-log.c:2389 [opt]
+    frame #11: 0x0000000101b73527 mono`mono_profiler_stat_hit(ip=<unavailable>, context=<unavailable>) at profiler.c:603 [opt]
+    frame #12: 0x0000000101ace83e mono`profiler_signal_handler(_dummy=27, _info=0x00007fff5e2594c8, context=0x00007fff5e259530) at mini-posix.c:340 [opt]
+    frame #13: 0x00007fffcf037b3a libsystem_platform.dylib`_sigtramp + 26
+    frame #14: 0x00007fffcef56a3f libsystem_kernel.dylib`__open + 11
+    frame #15: 0x0000000101ada009 mono`_wapi_open(pathname="/Users/angocke/code/roslyn/src/Compilers/Core/Source/Binding/AbstractLookupSymbolsInfo.cs", flags=<unavailable>, mode=438) at w32file-unix.c:199 [opt]
+    frame #16: 0x0000000101ad9880 mono`mono_w32file_create(name=<unavailable>, fileaccess=2147483648, sharemode=3, createmode=<unavailable>, attrs=128) at w32file-unix.c:2344 [opt]
+    frame #17: 0x0000000101b0ec33 mono`ves_icall_System_IO_MonoIO_Open(filename=<unavailable>, mode=3, access_mode=<unavailable>, share=<unavailable>, options=<unavailable>, error=0x00007fff5e259a90) at w32file.c:825 [opt]
+    frame #18: 0x0000000101f7ce25
+
+  thread #2, name = 'SGen worker'
+    frame #0: 0x00007fffcef56bf2 libsystem_kernel.dylib`__psynch_cvwait + 10
+    frame #1: 0x00007fffcf0427fa libsystem_pthread.dylib`_pthread_cond_wait + 712
+    frame #2: 0x0000000101c2fa3b mono`thread_func [inlined] mono_os_cond_wait(cond=0x0000000101d57960, mutex=<unavailable>) at mono-os-mutex.h:173 [opt]
+    frame #3: 0x0000000101c2fa2f mono`thread_func(thread_data=<unavailable>) at sgen-thread-pool.c:108 [opt]
+    frame #4: 0x00007fffcf04193b libsystem_pthread.dylib`_pthread_body + 180
+    frame #5: 0x00007fffcf041887 libsystem_pthread.dylib`_pthread_start + 286
+    frame #6: 0x00007fffcf04108d libsystem_pthread.dylib`thread_start + 13
+
+  thread #3, name = 'SGen worker'
+    frame #0: 0x00007fffcef56bf2 libsystem_kernel.dylib`__psynch_cvwait + 10
+    frame #1: 0x00007fffcf0427fa libsystem_pthread.dylib`_pthread_cond_wait + 712
+    frame #2: 0x0000000101c2fa1e mono`thread_func [inlined] mono_os_cond_wait(cond=0x0000000101dabbc0, mutex=<unavailable>) at mono-os-mutex.h:173 [opt]
+    frame #3: 0x0000000101c2fa12 mono`thread_func(thread_data=<unavailable>) at sgen-thread-pool.c:90 [opt]
+    frame #4: 0x00007fffcf04193b libsystem_pthread.dylib`_pthread_body + 180
+    frame #5: 0x00007fffcf041887 libsystem_pthread.dylib`_pthread_start + 286
+    frame #6: 0x00007fffcf04108d libsystem_pthread.dylib`thread_start + 13
+
+  thread #4, name = 'Finalizer'
+    frame #0: 0x00007fffcef4f386 libsystem_kernel.dylib`semaphore_wait_trap + 10
+    frame #1: 0x0000000101bafeb9 mono`finalizer_thread [inlined] mono_os_sem_wait(flags=MONO_SEM_FLAGS_ALERTABLE) at mono-os-semaphore.h:91 [opt]
+    frame #2: 0x0000000101bafeae mono`finalizer_thread at mono-coop-semaphore.h:43 [opt]
+    frame #3: 0x0000000101bafea6 mono`finalizer_thread(unused=<unavailable>) at gc.c:864 [opt]
+    frame #4: 0x0000000101b83459 mono`start_wrapper [inlined] start_wrapper_internal at threads.c:829 [opt]
+    frame #5: 0x0000000101b833d3 mono`start_wrapper(data=<unavailable>) at threads.c:891 [opt]
+    frame #6: 0x00007fffcf04193b libsystem_pthread.dylib`_pthread_body + 180
+    frame #7: 0x00007fffcf041887 libsystem_pthread.dylib`_pthread_start + 286
+    frame #8: 0x00007fffcf04108d libsystem_pthread.dylib`thread_start + 13
+
+  thread #5
+    frame #0: 0x00007fffcef5744e libsystem_kernel.dylib`__workq_kernreturn + 10
+    frame #1: 0x00007fffcf041621 libsystem_pthread.dylib`_pthread_wqthread + 1426
+    frame #2: 0x00007fffcf04107d libsystem_pthread.dylib`start_wqthread + 13
+
+  thread #6
+    frame #0: 0x00007fffcef5744e libsystem_kernel.dylib`__workq_kernreturn + 10
+    frame #1: 0x00007fffcf04148e libsystem_pthread.dylib`_pthread_wqthread + 1023
+    frame #2: 0x00007fffcf04107d libsystem_pthread.dylib`start_wqthread + 13
+
+  thread #7
+    frame #0: 0x00007fffcef5744e libsystem_kernel.dylib`__workq_kernreturn + 10
+    frame #1: 0x00007fffcf041621 libsystem_pthread.dylib`_pthread_wqthread + 1426
+    frame #2: 0x00007fffcf04107d libsystem_pthread.dylib`start_wqthread + 13
+
+  thread #8, name = 'Profiler sampler'
+    frame #0: 0x00007fffcef56d42 libsystem_kernel.dylib`__pthread_kill + 10
+    frame #1: 0x00007fffcf044457 libsystem_pthread.dylib`pthread_kill + 90
+    frame #2: 0x0000000101aceb01 mono`sampling_thread_func(data=<unavailable>) at mini-posix.c:732 [opt]
+    frame #3: 0x00007fffcf04193b libsystem_pthread.dylib`_pthread_body + 180
+    frame #4: 0x00007fffcf041887 libsystem_pthread.dylib`_pthread_start + 286
+    frame #5: 0x00007fffcf04108d libsystem_pthread.dylib`thread_start + 13
+
+  thread #9, name = 'Profiler helper'
+    frame #0: 0x0000000101ec6000 libmono-profiler-log.0.dylib`counters_and_perfcounters_sample at mono-profiler-log.c:2923 [opt]
+    frame #1: 0x0000000101ec5f81 libmono-profiler-log.0.dylib`counters_and_perfcounters_sample [inlined] counters_sample at mono-profiler-log.c:2961 [opt]
+    frame #2: 0x0000000101ec5f81 libmono-profiler-log.0.dylib`counters_and_perfcounters_sample(prof=<unavailable>) at mono-profiler-log.c:3242 [opt]
+    frame #3: 0x0000000101eca7fb libmono-profiler-log.0.dylib`helper_thread(arg=<unavailable>) at mono-profiler-log.c:4113 [opt]
+    frame #4: 0x00007fffcf04193b libsystem_pthread.dylib`_pthread_body + 180
+    frame #5: 0x00007fffcf041887 libsystem_pthread.dylib`_pthread_start + 286
+    frame #6: 0x00007fffcf04108d libsystem_pthread.dylib`thread_start + 13
+
+  thread #10, name = 'Profiler writer'
+    frame #0: 0x00007fffcef573ee libsystem_kernel.dylib`__wait4 + 10
+    frame #1: 0x0000000101a5fe1d mono`mono_handle_native_crash(signal=<unavailable>, ctx=<unavailable>, info=<unavailable>) at mini-exceptions.c:2717 [opt]
+    frame #2: 0x00000001019b334c mono`mono_sigsegv_signal_handler(_dummy=11, _info=0x0000700000b73548, context=0x0000700000b735b0) at mini-runtime.c:3079 [opt]
+    frame #3: 0x00007fffcf037b3a libsystem_platform.dylib`_sigtramp + 26
+    frame #4: 0x00007fffcf03f38d libsystem_pthread.dylib`pthread_mutex_lock + 1
+    frame #5: 0x0000000101ba601e mono`mono_domain_assembly_search [inlined] mono_os_mutex_lock(mutex=0x0000000000000208) at mono-os-mutex.h:99 [opt]
+    frame #6: 0x0000000101ba6016 mono`mono_domain_assembly_search(aname=0x0000700000b73970, user_data=0x0000000000000000) at appdomain.c:2083 [opt]
+    frame #7: 0x0000000101ae61e7 mono`mono_assembly_load_full_nosearch at assembly.c:1548 [opt]
+    frame #8: 0x0000000101ae61aa mono`mono_assembly_load_full_nosearch [inlined] mono_assembly_loaded_full(aname=<unavailable>) at assembly.c:3748 [opt]
+    frame #9: 0x0000000101ae619f mono`mono_assembly_load_full_nosearch(aname=<unavailable>, basedir=0x0000000000000000, status=<unavailable>, refonly=0) at assembly.c:3613 [opt]
+    frame #10: 0x0000000101ae22a8 mono`mono_assembly_load_full_internal(aname=0x0000700000b73970, requesting=0x00007fb1cf100f60, basedir=<unavailable>, status=<unavailable>, refonly=0) at assembly.c:3681 [opt]
+    frame #11: 0x0000000101ae1f17 mono`mono_assembly_load_reference(image=0x00007fb1cf806c00, index=8) at assembly.c:1383 [opt]
+    frame #12: 0x0000000101ae8c5d mono`mono_class_from_typeref_checked(image=0x00007fb1cf806c00, type_token=16777370, error=0x0000700000b73d38) at class.c:283 [opt]
+    frame #13: 0x0000000101af767d mono`mono_class_get_checked(image=0x00007fb1cf806c00, type_token=16777370, error=0x0000700000b73d38) at class.c:7324 [opt]
+    frame #14: 0x0000000101b4ac16 mono`mono_metadata_parse_type_internal at metadata.c:3615 [opt]
+    frame #15: 0x0000000101b4a90b mono`mono_metadata_parse_type_internal(m=<unavailable>, container=0x0000000000000000, opt_attrs=<unavailable>, transient=<unavailable>, ptr=<unavailable>, rptr=0x0000700000b73c50, error=<unavailable>) at metadata.c:1784 [opt]
+    frame #16: 0x0000000101b4b5ee mono`mono_metadata_parse_method_signature_full [inlined] mono_metadata_parse_type_checked(m=0x00007fb1cf806c00, container=0x0000000000000000, transient=0, rptr=<unavailable>, error=0x0000700000b73d38) at metadata.c:1838 [opt]
+    frame #17: 0x0000000101b4b5d0 mono`mono_metadata_parse_method_signature_full(m=<unavailable>, container=0x0000000000000000, def=<unavailable>, ptr=<unavailable>, rptr=<unavailable>, error=0x0000700000b73d38) at metadata.c:2177 [opt]
+    frame #18: 0x0000000101b25aa3 mono`mono_method_signature_checked(m=0x00007fb1cf8731d8, error=0x0000700000b73d38) at loader.c:2444 [opt]
+    frame #19: 0x0000000101b05c46 mono`mono_method_get_name_full(method=<unavailable>, signature=1, ret=<unavailable>, format=<unavailable>) at debug-helpers.c:884 [opt]
+    frame #20: 0x0000000101ecaf3d libmono-profiler-log.0.dylib`handle_writer_queue_entry(prof=<unavailable>) at mono-profiler-log.c:4281 [opt]
+    frame #21: 0x0000000101ecad98 libmono-profiler-log.0.dylib`writer_thread(arg=<unavailable>) at mono-profiler-log.c:4344 [opt]
+    frame #22: 0x00007fffcf04193b libsystem_pthread.dylib`_pthread_body + 180
+    frame #23: 0x00007fffcf041887 libsystem_pthread.dylib`_pthread_start + 286
+    frame #24: 0x00007fffcf04108d libsystem_pthread.dylib`thread_start + 13
+
+  thread #11, name = 'Profiler dumper'
+    frame #0: 0x0000000105ead8c9 dyld`ImageLoaderMachO::findClosestSymbol(mach_header const*, void const*, void const**) + 353
+    frame #1: 0x0000000105ea46e0 dyld`dladdr + 133
+    frame #2: 0x00007fffcee25790 libdyld.dylib`dladdr + 72
+    frame #3: 0x0000000101ecc14b libmono-profiler-log.0.dylib`handle_dumper_queue_entry [inlined] symbol_for at mono-profiler-log.c:2687 [opt]
+    frame #4: 0x0000000101ecc135 libmono-profiler-log.0.dylib`handle_dumper_queue_entry at mono-profiler-log.c:2723 [opt]
+    frame #5: 0x0000000101ecc12a libmono-profiler-log.0.dylib`handle_dumper_queue_entry(prof=<unavailable>) at mono-profiler-log.c:4435 [opt]
+    frame #6: 0x0000000101ecb868 libmono-profiler-log.0.dylib`dumper_thread(arg=<unavailable>) at mono-profiler-log.c:4453 [opt]
+    frame #7: 0x00007fffcf04193b libsystem_pthread.dylib`_pthread_body + 180
+    frame #8: 0x00007fffcf041887 libsystem_pthread.dylib`_pthread_start + 286
+    frame #9: 0x00007fffcf04108d libsystem_pthread.dylib`thread_start + 13
+
+  thread #12, name = 'tid_310b'
+    frame #0: 0x00007fffcef56bf2 libsystem_kernel.dylib`__psynch_cvwait + 10
+    frame #1: 0x00007fffcf0427fa libsystem_pthread.dylib`_pthread_cond_wait + 712
+    frame #2: 0x0000000101c45948 mono`mono_thread_info_sleep [inlined] mono_os_cond_timedwait at mono-os-mutex.h:216 [opt]
+    frame #3: 0x0000000101c458c6 mono`mono_thread_info_sleep at mono-coop-mutex.h:102 [opt]
+    frame #4: 0x0000000101c458be mono`mono_thread_info_sleep [inlined] sleep_interruptable(ms=<unavailable>, alerted=<unavailable>) at mono-threads.c:1200 [opt]
+    frame #5: 0x0000000101c45874 mono`mono_thread_info_sleep(ms=<unavailable>, alerted=<unavailable>) at mono-threads.c:1232 [opt]
+    frame #6: 0x0000000101b87c16 mono`monitor_thread(unused=<unavailable>) at threadpool-worker-default.c:693 [opt]
+    frame #7: 0x0000000101b83459 mono`start_wrapper [inlined] start_wrapper_internal at threads.c:829 [opt]
+    frame #8: 0x0000000101b833d3 mono`start_wrapper(data=<unavailable>) at threads.c:891 [opt]
+    frame #9: 0x00007fffcf04193b libsystem_pthread.dylib`_pthread_body + 180
+    frame #10: 0x00007fffcf041887 libsystem_pthread.dylib`_pthread_start + 286
+    frame #11: 0x00007fffcf04108d libsystem_pthread.dylib`thread_start + 13
+
+  thread #13, name = 'Threadpool worker'
+    frame #0: 0x0000000101acf070 mono`per_thread_profiler_hit(ctx=0x0000700000ffb6c8) at mini-posix.c:236 [opt]
+    frame #1: 0x0000000101ace83e mono`profiler_signal_handler(_dummy=27, _info=0x0000700000ffb660, context=0x0000700000ffb6c8) at mini-posix.c:340 [opt]
+    frame #2: 0x00007fffcf037b3a libsystem_platform.dylib`_sigtramp + 26
+    frame #3: 0x00000001019c94a9 mono`mono_method_to_ir(cfg=<unavailable>, method=0x00007fb1ce010100, start_bblock=0x00007fb1ce014988, end_bblock=0x00007fb1ce014ad0, return_var=0x0000000000000000, inline_args=0x00007fb1ce013e60, inline_offset=<unavailable>, is_virtual_call=<unavailable>) at method-to-ir.c:7650 [opt]
+    frame #4: 0x00000001019abad8 mono`mini_method_compile(method=<unavailable>, opts=370239999, domain=0x00007fb1cd4113e0, flags=<unavailable>, parts=0, aot_method_index=-1) at mini.c:3442 [opt]
+    frame #5: 0x00000001019af1d3 mono`mono_jit_compile_method_inner(method=0x00007fb1ce010100, target_domain=0x00007fb1cd4113e0, opt=370239999, error=0x0000700000ffbe48) at mini.c:4167 [opt]
+    frame #6: 0x00000001019b26f5 mono`mono_jit_compile_method_with_opt(method=<unavailable>, opt=<unavailable>, jit_only=0, error=<unavailable>) at mini-runtime.c:2129 [opt]
+    frame #7: 0x0000000101a62305 mono`common_call_trampoline(regs=0x0000700000ffbf28, code="H\x8b»H\x8b\x85HˇˇˇH\x89\bH\x89\x8dPˇˇˇH\x8b–H¡Í\tH\x81‚ˇˇ\x7f", m=<unavailable>, vt=0x0000000000000000, vtable_slot=<unavailable>, error=<unavailable>) at mini-trampolines.c:704 [opt]
+    frame #8: 0x0000000101a61e29 mono`mono_magic_trampoline(regs=<unavailable>, code=<unavailable>, arg=<unavailable>, tramp=<unavailable>) at mini-trampolines.c:834 [opt]
+    frame #9: 0x0000000101e3f39e
+    frame #10: 0x0000000107f9a857
+    frame #11: 0x00000001060338d8 Microsoft.CodeAnalysis.CSharp.dll.dylib`Microsoft_CodeAnalysis_CSharp_CSharpCompiler_ParseFile_Microsoft_CodeAnalysis_CSharp_CSharpParseOptions_Microsoft_CodeAnalysis_CSharp_CSharpParseOptions_bool__Microsoft_CodeAnalysis_CommandLineSourceFile_Microsoft_CodeAnalysis_DiagnosticBag_string_(this=0x000000010200f340, parseOptions=0x00000001020d5390, scriptParseOptions=0x0000000102115228, addedDiagnostics=4329656864, file=34214424, diagnostics=0x000000010203a218, normalizedFilePath=4329663912) + 152
+    frame #12: 0x00000001064366c7 Microsoft.CodeAnalysis.CSharp.dll.dylib`Microsoft_CodeAnalysis_CSharp_CSharpCompiler__c__DisplayClass8_0__CreateCompilationb__0_int(this=0x00000001021151d8, i=65) + 183
+    frame #13: 0x0000000107f9a79b
+    frame #14: 0x00000001039f90e3 mscorlib.dll.dylib`System_Threading_Tasks_Parallel__c__DisplayClass17_0_1_TLocal_REF__ForWorkerb__1 + 931
+    frame #15: 0x0000000103a0142d mscorlib.dll.dylib`System_Threading_Tasks_Task_InnerInvoke + 77
+    frame #16: 0x0000000103a01494 mscorlib.dll.dylib`System_Threading_Tasks_Task_InnerInvokeWithArg_System_Threading_Tasks_Task + 20
+    frame #17: 0x0000000103a07f46 mscorlib.dll.dylib`System_Threading_Tasks_Task__c__DisplayClass176_0__ExecuteSelfReplicatingb__0_object + 438
+    frame #18: 0x0000000103a01466 mscorlib.dll.dylib`System_Threading_Tasks_Task_InnerInvoke + 134
+    frame #19: 0x0000000103a00d1a mscorlib.dll.dylib`System_Threading_Tasks_Task_Execute + 90
+    frame #20: 0x0000000103a013d6 mscorlib.dll.dylib`System_Threading_Tasks_Task_ExecutionContextCallback_object + 70
+    frame #21: 0x00000001039d8ceb mscorlib.dll.dylib`System_Threading_ExecutionContext_RunInternal_System_Threading_ExecutionContext_System_Threading_ContextCallback_object_bool + 395
+    frame #22: 0x00000001039d8b51 mscorlib.dll.dylib`System_Threading_ExecutionContext_Run_System_Threading_ExecutionContext_System_Threading_ContextCallback_object_bool + 33
+    frame #23: 0x0000000103a01322 mscorlib.dll.dylib`System_Threading_Tasks_Task_ExecuteWithThreadLocal_System_Threading_Tasks_Task_ + 290
+    frame #24: 0x0000000103a01197 mscorlib.dll.dylib`System_Threading_Tasks_Task_ExecuteEntry_bool + 231
+    frame #25: 0x0000000103a0104f mscorlib.dll.dylib`System_Threading_Tasks_Task_System_Threading_IThreadPoolWorkItem_ExecuteWorkItem + 15
+    frame #26: 0x00000001039de435 mscorlib.dll.dylib`System_Threading_ThreadPoolWorkQueue_Dispatch + 469
+    frame #27: 0x00000001039dfc29 mscorlib.dll.dylib`System_Threading__ThreadPoolWaitCallback_PerformWaitCallback + 9
+    frame #28: 0x00000001019b6828 mono`mono_jit_runtime_invoke(method=<unavailable>, obj=<unavailable>, params=0x0000000000000000, exc=<unavailable>, error=<unavailable>) at mini-runtime.c:2791 [opt]
+    frame #29: 0x0000000101bb8008 mono`do_runtime_invoke(method=0x00007fb1cd82e3f0, obj=0x0000000000000000, params=0x0000000000000000, exc=0x0000700000ffcc98, error=0x0000700000ffcca0) at object.c:2828 [opt]
+    frame #30: 0x0000000101b85b10 mono`worker_callback at threadpool.c:278 [opt]
+    frame #31: 0x0000000101b85abe mono`worker_callback at threadpool.c:362 [opt]
+    frame #32: 0x0000000101b882c1 mono`worker_thread(unused=<unavailable>) at threadpool-worker-default.c:494 [opt]
+    frame #33: 0x0000000101b83459 mono`start_wrapper [inlined] start_wrapper_internal at threads.c:829 [opt]
+    frame #34: 0x0000000101b833d3 mono`start_wrapper(data=<unavailable>) at threads.c:891 [opt]
+    frame #35: 0x00007fffcf04193b libsystem_pthread.dylib`_pthread_body + 180
+    frame #36: 0x00007fffcf041887 libsystem_pthread.dylib`_pthread_start + 286
+    frame #37: 0x00007fffcf04108d libsystem_pthread.dylib`thread_start + 13
+
+  thread #14, name = 'Threadpool worker'
+    frame #0: 0x00007fffcef56c22 libsystem_kernel.dylib`__psynch_mutexwait + 10
+    frame #1: 0x00007fffcf041dfa libsystem_pthread.dylib`_pthread_mutex_lock_wait + 100
+    frame #2: 0x0000000101c5b396 mono`monoeg_g_getenv(variable="MONO_EXTERNAL_ENCODINGS") at gmisc-unix.c:63 [opt]
+    frame #3: 0x0000000101c3cb39 mono`mono_unicode_to_external(uni=<unavailable>) at strenc.c:184 [opt]
+    frame #4: 0x0000000101ad9841 mono`mono_w32file_create(name=0x000000010211b5b4, fileaccess=2147483648, sharemode=3, createmode=<unavailable>, attrs=128) at w32file-unix.c:2333 [opt]
+    frame #5: 0x0000000101b0ec33 mono`ves_icall_System_IO_MonoIO_Open(filename=<unavailable>, mode=3, access_mode=<unavailable>, share=<unavailable>, options=<unavailable>, error=0x00007000011fefd0) at w32file.c:825 [opt]
+    frame #6: 0x0000000101f7ce25
+
+  thread #15, name = 'Threadpool worker'
+    frame #0: 0x00007fffcef56c22 libsystem_kernel.dylib`__psynch_mutexwait + 10
+    frame #1: 0x00007fffcf041dfa libsystem_pthread.dylib`_pthread_mutex_lock_wait + 100
+    frame #2: 0x0000000101c5b396 mono`monoeg_g_getenv(variable="MONO_EXTERNAL_ENCODINGS") at gmisc-unix.c:63 [opt]
+    frame #3: 0x0000000101c3cb39 mono`mono_unicode_to_external(uni=<unavailable>) at strenc.c:184 [opt]
+    frame #4: 0x0000000101ad9841 mono`mono_w32file_create(name=0x000000010211c51c, fileaccess=2147483648, sharemode=3, createmode=<unavailable>, attrs=128) at w32file-unix.c:2333 [opt]
+    frame #5: 0x0000000101b0ec33 mono`ves_icall_System_IO_MonoIO_Open(filename=<unavailable>, mode=3, access_mode=<unavailable>, share=<unavailable>, options=<unavailable>, error=0x0000700001401fd0) at w32file.c:825 [opt]
+    frame #6: 0x0000000101f7ce25
+
+  thread #16, name = 'Threadpool worker'
+    frame #0: 0x00007fffcef56c22 libsystem_kernel.dylib`__psynch_mutexwait + 10
+    frame #1: 0x00007fffcf041dfa libsystem_pthread.dylib`_pthread_mutex_lock_wait + 100
+    frame #2: 0x0000000101c5b396 mono`monoeg_g_getenv(variable="MONO_EXTERNAL_ENCODINGS") at gmisc-unix.c:63 [opt]
+    frame #3: 0x0000000101c3cb39 mono`mono_unicode_to_external(uni=<unavailable>) at strenc.c:184 [opt]
+    frame #4: 0x0000000101ad9841 mono`mono_w32file_create(name=0x000000010211d54c, fileaccess=2147483648, sharemode=3, createmode=<unavailable>, attrs=128) at w32file-unix.c:2333 [opt]
+    frame #5: 0x0000000101b0ec33 mono`ves_icall_System_IO_MonoIO_Open(filename=<unavailable>, mode=3, access_mode=<unavailable>, share=<unavailable>, options=<unavailable>, error=0x0000700001604fd0) at w32file.c:825 [opt]
+    frame #6: 0x0000000101f7ce25
+
+  thread #17, name = 'Threadpool worker'
+    frame #0: 0x00007fffcef56c22 libsystem_kernel.dylib`__psynch_mutexwait + 10
+    frame #1: 0x00007fffcf041dfa libsystem_pthread.dylib`_pthread_mutex_lock_wait + 100
+    frame #2: 0x0000000101c5b396 mono`monoeg_g_getenv(variable="MONO_EXTERNAL_ENCODINGS") at gmisc-unix.c:63 [opt]
+    frame #3: 0x0000000101c3cb39 mono`mono_unicode_to_external(uni=<unavailable>) at strenc.c:184 [opt]
+    frame #4: 0x0000000101adbda8 mono`mono_w32file_get_attributes(name=<unavailable>) at w32file-unix.c:3711 [opt]
+    frame #5: 0x0000000101b0eb35 mono`ves_icall_System_IO_MonoIO_Open [inlined] get_file_attributes(path=<unavailable>) at w32file.c:206 [opt]
+    frame #6: 0x0000000101b0eb29 mono`ves_icall_System_IO_MonoIO_Open(filename=<unavailable>, mode=3, access_mode=1, share=3, options=0, error=0x0000700001807fd0) at w32file.c:818 [opt]
+    frame #7: 0x0000000101f7ce25
+
+  thread #18, name = 'Threadpool worker'
+    frame #0: 0x00007fffcef56c22 libsystem_kernel.dylib`__psynch_mutexwait + 10
+    frame #1: 0x00007fffcf041dfa libsystem_pthread.dylib`_pthread_mutex_lock_wait + 100
+    frame #2: 0x0000000101c5b396 mono`monoeg_g_getenv(variable="MONO_EXTERNAL_ENCODINGS") at gmisc-unix.c:63 [opt]
+    frame #3: 0x0000000101c3cb39 mono`mono_unicode_to_external(uni=<unavailable>) at strenc.c:184 [opt]
+    frame #4: 0x0000000101adbda8 mono`mono_w32file_get_attributes(name=<unavailable>) at w32file-unix.c:3711 [opt]
+    frame #5: 0x0000000101b0eb35 mono`ves_icall_System_IO_MonoIO_Open [inlined] get_file_attributes(path=<unavailable>) at w32file.c:206 [opt]
+    frame #6: 0x0000000101b0eb29 mono`ves_icall_System_IO_MonoIO_Open(filename=<unavailable>, mode=3, access_mode=1, share=3, options=0, error=0x0000700001a0afd0) at w32file.c:818 [opt]
+    frame #7: 0x0000000101f7ce25
+
+  thread #19, name = 'Threadpool worker'
+    frame #0: 0x00007fffcf037b20 libsystem_platform.dylib`_sigtramp
+
+  thread #20, name = 'Threadpool worker'
+    frame #0: 0x00007fffcf037b20 libsystem_platform.dylib`_sigtramp
+(lldb) detach
+Process 22781 detached
+(lldb) quit
+
+=================================================================
+Got a SIGSEGV while executing native code. This usually indicates
+a fatal error in the mono runtime or one of the native libraries 
+used by your application.
+=================================================================
+
