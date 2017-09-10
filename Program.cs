@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace Roslyn.Perf
 {
+    [MonoJob]
     public class ParsingBenchmark
     {
         private readonly string[] _files = new string[ReproConstants.FileNames.Length];
