@@ -3,9 +3,9 @@
 /obj/
 /BenchmarkDotNet.Artifacts/
 
-CodeAnalysisRepro/Binaries/*
-CodeAnalysisRepro/obj/Debug/*.dll
-CodeAnalysisRepro/obj/Debug/*.pdb
-CodeAnalysisRepro/obj/Debug/*.mdb
-CodeAnalysisRepro/obj/Debug/CodeAnalysis.csproj*
+/CodeAnalysisRepro/Binaries/Microsoft.CodeAnalysis.xml
+/CodeAnalysisRepro/obj/Debug/*.dll
+/CodeAnalysisRepro/obj/Debug/*.pdb
+/CodeAnalysisRepro/obj/Debug/*.mdb
+/CodeAnalysisRepro/obj/Debug/CodeAnalysis.csproj*
 
