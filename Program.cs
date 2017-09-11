@@ -41,9 +41,35 @@ namespace Roslyn.Perf
 
     public class Program
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            var summary = BenchmarkRunner.Run<ParsingBenchmark>();
+            if (args.Length > 1)
+            {
+                PrintUsage();
+                return 1;
+            }
+
+            if (args.Length == 1)
+            {
+                if (args[0] != "--dry-run")
+                {
+                    PrintUsage();
+                    return -1;
+                }
+
+                var parse = new ParsingBenchmark();
+                parse.ParseFiles();
+            }
+            else
+            {
+                var summary = BenchmarkRunner.Run<ParsingBenchmark>();
+            }
+            return 0;
+
+            void PrintUsage()
+            {
+                Console.Error.WriteLine("Usage: roslyn-macro-perf [--dry-run]");
+            }
         }
     }
 }
