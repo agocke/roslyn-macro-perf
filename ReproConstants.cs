@@ -1,6 +1,7 @@
 
 using System.IO;
 using System.Runtime.CompilerServices;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace Roslyn.Perf
 {
@@ -8,6 +9,10 @@ namespace Roslyn.Perf
     {
         public static string GetSourceDirectory([CallerFilePath]string path = "")
             => Path.GetDirectoryName(path);
+
+        public static readonly CSharpParseOptions ParseOptions = CSharpParseOptions
+            .Default
+            .WithPreprocessorSymbols("TRACE", "DEBUG", "COMPILERCORE");
 
         public static readonly string[] FileNames =
         {
@@ -534,8 +539,6 @@ namespace Roslyn.Perf
             "Xml/XmlCharType.cs",
             "obj/Debug/GeneratedStrongNameKey.cs",
             "obj/Debug/GeneratedInternalsVisibleTo.cs",
-            "obj/Debug/GeneratedAssemblyInfo_42.42.42.42.cs",
-            "obj/Debug/GeneratedAssemblyInfo_42.42.42.42.cs",
             "obj/Debug/GeneratedAssemblyInfo_42.42.42.42.cs"
         };
     }
