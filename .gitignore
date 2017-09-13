@@ -1,7 +1,6 @@
 
 /bin/
 /obj/
-/BenchmarkDotNet.Artifacts/
 
 /CodeAnalysisRepro/Binaries/Microsoft.CodeAnalysis.xml
 /CodeAnalysisRepro/obj/Debug/*.dll
