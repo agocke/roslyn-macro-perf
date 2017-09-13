@@ -36,4 +36,8 @@ $MONO_PATH --aot=bind-to-runtime-version,write-symbols,profile=../obj/aotprofile
 # Run the benchmark
 echo ""
 echo "Running benchmark"
-perf stat -r 10 $MONO_PATH $COMPILER_TOOLS_DIR/csc.exe $CSC_ARGS
+if [ `which perf` ]; then
+    perf stat -r 10 $MONO_PATH $COMPILER_TOOLS_DIR/csc.exe $CSC_ARGS
+else
+    time $MONO_PATH $COMPILER_TOOLS_DIR/csc.exe $CSC_ARGS
+fi
