@@ -2,25 +2,21 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Attributes.Jobs;
-using BenchmarkDotNet.Running;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
-using Mono.Options;
+using Microsoft.Xunit.Performance;
+using Microsoft.Xunit.Performance.Api;
 
 namespace Roslyn.Perf
 {
-    [MonoJob]
     public class CompilationBenchmark
     {
-        internal static string s_refAssemblyPath;
-
         private readonly string[] _files = new string[ReproConstants.FileNames.Length];
         private readonly SyntaxTree[] _parseTrees = new SyntaxTree[ReproConstants.FileNames.Length];
 
@@ -41,13 +37,13 @@ namespace Roslyn.Perf
             }
 
             // Create references
-            _references.AddRange(Directory.GetFiles(s_refAssemblyPath, "*.dll", SearchOption.AllDirectories)
+            var assemblyPath = Environment.GetEnvironmentVariable("MONO_REF_PATH");
+            _references.AddRange(Directory.GetFiles(assemblyPath, "*.dll", SearchOption.AllDirectories)
                 .Select(f => MetadataReference.CreateFromFile(f)));
             _references.Add(MetadataReference.CreateFromFile(Path.Combine(reproPath, "System.Collections.Immutable.dll")));
             _references.Add(MetadataReference.CreateFromFile(Path.Combine(reproPath, "System.Reflection.Metadata.dll")));
         }
 
-        [Benchmark]
         public void Compile()
         {
             ParseFiles();
@@ -100,48 +96,14 @@ namespace Roslyn.Perf
     {
         public static int Main(string[] args)
         {
-            bool dryRun = false;
-
-            var options = new OptionSet()
+            using (var harness = new XunitPerformanceHarness(args))
             {
-                {"dry-run", "Run the benchmark without monitoring", _ => dryRun = true}
-            };
-
-            List<string> extra;
-            try
-            {
-                extra = options.Parse(args);
+                var entryAssemblyPath = Assembly.GetEntryAssembly().Location;
+                harness.RunBenchmarks(entryAssemblyPath);
             }
-            catch (OptionException e)
-            {
-                Console.Error.WriteLine(e.Message);
-                return 1;
-            }
-
-            if (extra.Count != 1)
-            {
-                ShowHelp();
-                return 1;
-            }
-
-            CompilationBenchmark.s_refAssemblyPath = Path.GetFullPath(extra[0]);
-
-            if (dryRun)
-            {
-                DryRun();
-                return 0;
-            }
-
-            var summary = BenchmarkRunner.Run<CompilationBenchmark>();
             return 0;
         }
 
-        private static void DryRun()
-        {
-            Console.WriteLine("Running dry run");
-            (new CompilationBenchmark()).Compile();
-        }
-        
         private static void ShowHelp()
         {
             Console.Error.WriteLine("usage: roslyn-macro-perf [options] <path-to-ref-assemblies>");
